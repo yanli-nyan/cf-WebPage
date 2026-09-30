@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>艳丽导航 - 公共首页</title>
+    <title>艳丽导航 - 私人面板</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
     <style>
@@ -23,6 +23,69 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf5 100%);
             min-height: 100vh;
             padding-bottom: 50px;
+        }
+
+        /* 密码框样式 */
+        #loginBox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf5 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            gap: 20px;
+        }
+
+        #loginBox h2 {
+            color: #3b82f6;
+            font-size: 28px;
+        }
+
+        #pwdInput {
+            padding: 14px 20px;
+            width: 280px;
+            border: 2px solid #ddd;
+            border-radius: 16px;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        #pwdInput:focus {
+            border-color: #3b82f6;
+        }
+
+        #loginBtn {
+            padding: 12px 30px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #loginBtn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        #tip {
+            color: #ff4444;
+            height: 20px;
+            font-size: 14px;
+        }
+
+        /* 主内容默认隐藏 */
+        #main {
+            display: none;
         }
 
         .navbar {
@@ -198,37 +261,84 @@
 </head>
 
 <body>
-    <div class="navbar">
-        <div class="nav-container">
-            <div class="logo">公共导航</div>
-            <div class="nav-menu">
-                <a href="nav.html">进入私人面板</a>
+    <!-- 密码验证 -->
+    <div id="loginBox">
+        <h2>请输入密码</h2>
+        <input type="password" id="pwdInput" placeholder="请输入访问密码">
+        <div id="tip"></div>
+        <button id="loginBtn">确认进入</button>
+    </div>
+    <!-- 主内容 -->
+    <div id="main">
+        <div class="navbar">
+            <div class="nav-container">
+                <div class="logo">私人导航面板</div>
+                <div class="nav-menu">
+                    <a href="index.html">返回公共首页</a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="header">
-        <h1>公共快捷导航</h1>
-        <p>公开常用站点 · 无需密码</p>
-    </div>
-    <div class="container">
-        <a href="https://www.bilibili.com/" class="card">
-            <div class="icon">📺</div>
-            <div class="title">B站</div>
-        </a>
-        <a href="https://gitee.com/" class="card">
-            <div class="icon">📂</div>
-            <div class="title">Gitee</div>
-        </a>
-        a href="https://github.com/yanli78" class="card">
-        <div class="icon">
-            <img src="https://github.com/favicon.ico" width="32" height="32">
+        <div class="header">
+            <h1>私人服务导航</h1>
+            <p>仅自己使用的内部服务入口</p>
         </div>
-        <div class="title">GitHub</div>
-        </a>
+        <div class="container">
+            <a href="https://grok2api.yanli.cc.cd/" class="card">
+                <div class="icon">☢</div>
+                <div class="title">Grok2API</div>
+            </a>
+            <a href="https://cloud.yanli.cc.cd/" class="card">
+                <div class="icon">📦</div>
+                <div class="title">云盘</div>
+            </a>
+            <a href="https://clash.yanli.cc.cd/" class="card">
+                <div class="icon">🐱</div>
+                <div class="title">节点大全</div>
+            </a>
+            <a href="https://github.com/yanli78" class="card">
+                <div class="icon">
+                    <img src="https://github.com/favicon.ico" width="32" height="32">
+                </div>
+                <div class="title">GitHub</div>
+            </a>
+        </div>
+        <div class="footer">
+            © 2026 艳丽导航 · 私人区域
+        </div>
     </div>
-    <div class="footer">
-        © 2026 艳丽导航 · 公共区
-    </div>
+    <script>
+        // 密码
+        const PASSWORD = "yanli";
+        const loginBox = document.getElementById('loginBox');
+        const main = document.getElementById('main');
+        const pwdInput = document.getElementById('pwdInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const tip = document.getElementById('tip');
+        // 页面加载时检查登录状态
+        window.onload = function () {
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                loginBox.style.display = 'none';
+                main.style.display = 'block';
+            }
+        };
+        // 验证密码
+        function checkPassword() {
+            if (pwdInput.value === PASSWORD) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                loginBox.style.display = 'none';
+                main.style.display = 'block';
+            } else {
+                tip.textContent = '密码错误，请重试！';
+                pwdInput.value = '';
+            }
+        }
+        // 点击登录
+        loginBtn.onclick = checkPassword;
+        // 回车登录
+        pwdInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+    </script>
 </body>
 
 </html>
